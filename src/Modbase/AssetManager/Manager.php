@@ -2,6 +2,7 @@
 
 use \Illuminate\Filesystem\Filesystem as Filesystem;
 use \Illuminate\Support\Facades\Config as Config;
+use \Illuminate\Support\Facades\HTML;
 
 class Manager {
 
@@ -29,35 +30,56 @@ class Manager {
     }
 
     /**
-     * Get HTML for all stylesheets of the bundle
-     * 
-     * @param  string $bundle
-     * @return string
+     * Get HTML for stylesheet of the bundle
+     *
+*@param        $bundle
+     * @param string $folder
+     * @param array  $option ['index' => 0, 'name'=>'style.name']
+     *                       Important: name should not contain '-'.
+     *
+     * @return string stylesheet html
      */
-    public function styles($bundle)
+    public function styles($bundle, $folder = 'css', $option = ['index' => 0])
     {
         // If we didn't parse the file before, then do it now
         if (!$this->data)
         {
             $this->parseVersionsFile();
         }
-
-        // Create link tags for all stylesheets
-        foreach ($this->data[$bundle.'.styles'] as $style)
-        {
-            $styles[] = '<link rel="stylesheet" href="/css/'.$style.'" />'.PHP_EOL;
+        // Parser style file with bundle
+        $style = '';
+        if (array_key_exists('index', $option)) {
+            $index = intval($option['index']);
+            $filename = $this->data[$bundle.'.styles'][$index];
+            $style = HTML::style($folder.'/'.$filename);
+        }
+        else if (array_key_exists('name', $option)) {
+            $name = strval($option['name']);
+            foreach ($this->data[$bundle.'.styles'] as $filename) {
+                $pieces = explode('-', $filename);
+                if ($name == $pieces[0]) {
+                    $style = HTML::style($folder.'/'.$filename);
+                    break;
+                }
+            }
+        }
+        else {
+            $style = HTML::style($folder.'/'.$this->data[$bundle.'.styles'][0]);
         }
 
-        return join(PHP_EOL, $styles);
+        return $style.PHP_EOL;
     }
 
     /**
-     * Get HTML for all JavaScripts of the bundle
-     * 
-     * @param  string $bundle
-     * @return string
+     * Get HTML for javascript of the bundle
+     * @param        $bundle
+     * @param string $folder
+     * @param array  $option ['index' => 0, 'name'=>'script.name']
+     *                       Important: name should not contain '-'.
+     *
+     * @return string javascript html
      */
-    public function scripts($bundle)
+    public function scripts($bundle, $folder = 'css', $option = ['index' => 0])
     {
         // If we didn't parse the file before, then do it now
         if (!$this->data)
@@ -65,13 +87,28 @@ class Manager {
             $this->parseVersionsFile();
         }
 
-        // Create script tags for all JavaScripts
-        foreach ($this->data[$bundle.'.scripts'] as $script)
-        {
-            $scripts[] = '<script src="/js/'.$script.'"></script>'.PHP_EOL;
+        // Parser script file with bundle
+        $script = '';
+        if (array_key_exists('index', $option)) {
+            $index = intval($option['index']);
+            $filename = $this->data[$bundle.'.scripts'][$index];
+            $script = HTML::script($folder.'/'.$filename);
+        }
+        else if (array_key_exists('name', $option)) {
+            $name = strval($option['name']);
+            foreach ($this->data[$bundle.'.styles'] as $filename) {
+                $pieces = explode('-', $filename);
+                if ($name == $pieces[0]) {
+                    $script = HTML::script($folder.'/'.$filename);
+                    break;
+                }
+            }
+        }
+        else {
+            $script = HTML::script($folder.'/'.$this->data[$bundle.'.scripts'][0]);
         }
 
-        return join(PHP_EOL, $scripts);
+        return $script.PHP_EOL;
     }
 
     /**

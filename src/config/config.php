@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'file' => 'assets.json',
+    'file' => 'asset_manifest.json',
 ];
