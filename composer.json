@@ -1,5 +1,5 @@
 {
-    "name": "modbase/asset-manager",
+    "name": "HyanCat/asset-manager",
     "description": "A very basic asset manager to be used in combination with versioned assets.",
     "license": "MIT",
     "authors": [
@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "illuminate/support": "~4.1"
+        "illuminate/support": "~4.2"
     },
     "autoload": {
         "psr-0": {
