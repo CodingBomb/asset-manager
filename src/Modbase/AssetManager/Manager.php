@@ -32,7 +32,7 @@ class Manager {
     /**
      * Get HTML for stylesheet of the bundle
      *
-*@param        $bundle
+     * @param        $bundle
      * @param string $folder
      * @param array  $option ['index' => 0, 'name'=>'style.name']
      *                       Important: name should not contain '-'.
@@ -79,7 +79,7 @@ class Manager {
      *
      * @return string javascript html
      */
-    public function scripts($bundle, $folder = 'css', $option = ['index' => 0])
+    public function scripts($bundle, $folder = 'js', $option = ['index' => 0])
     {
         // If we didn't parse the file before, then do it now
         if (!$this->data)
@@ -96,7 +96,7 @@ class Manager {
         }
         else if (array_key_exists('name', $option)) {
             $name = strval($option['name']);
-            foreach ($this->data[$bundle.'.styles'] as $filename) {
+            foreach ($this->data[$bundle.'.scripts'] as $filename) {
                 $pieces = explode('-', $filename);
                 if ($name == $pieces[0]) {
                     $script = HTML::script($folder.'/'.$filename);
